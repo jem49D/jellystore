@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>JellyStore</title>
+
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2196F3">
+    <meta name="format-detection" content="telephone=no">  попробуй потом--> 
+
+    <!-- <meta name="theme-color" content="#0088cc"> определить свет или сделать динамичное изменение -->
+
+    <link rel="preconnect" href="https://api.telegram.org"> <!-- попробовать с и без -->
+
+     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+</head>
+<body>
+    <h1>Проверка данных</h1>
+    <script>
+
+        let tg = window.Telegram.WebApp;
+
+        const initData = tg.initData;
+        const initDataUnsafe = tg.initDataUnsafe;
+
+        console.log("Init Data:", initData);
+        console.log("User:", initDataUnsafe.user);
+
+
+    </script>
+</body>
+</html>
