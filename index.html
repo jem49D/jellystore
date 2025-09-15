@@ -3,40 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-
     <link rel="stylesheet" href="style.css">
-
     <title>JellyStore</title>
-
-    <!-- <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#2196F3">
-    <meta name="format-detection" content="telephone=no">  попробуй потом--> 
-
-    <!-- <meta name="theme-color" content="#0088cc"> определить свет или сделать динамичное изменение -->
-
-    <link rel="preconnect" href="https://api.telegram.org"> <!-- попробовать с и без -->
-
-     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <h1>Проверка данных</h1>
+    <div id="status">Отправка данных...</div>
+    
     <script>
+        const API_BASE_URL = 'http://localhost:5000';
 
-        let tg = window.Telegram.WebApp;
-
+        // Ждем полной загрузки Telegram Web App
+        Telegram.WebApp.ready();
+        
+        // Получаем данные от Telegram
+        const tg = window.Telegram.WebApp;
         const initData = tg.initData;
-        const initDataUnsafe = tg.initDataUnsafe;
-
-       // alert("Init Data:", initData);
-        alert("User:"+ initDataUnsafe.user?.username);
-
-
+        
+        // Функция для отправки данных на бэкенд
+        async function sendInitDataToBackend() {
+            try {
+                const statusElement = document.getElementById('status');
+                statusElement.textContent = 'Отправка данных на сервер...';
+                
+                // Отправляем POST-запрос с JSON данными
+                const response = await fetch(`${API_BASE_URL}/api/data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        initData: initData
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Ошибка сервера: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
+                    statusElement.style.color = 'green';
+                    
+                    // Можно расширить приложение дальше
+                    tg.expand(); // Разворачиваем Mini App на весь экран
+                    tg.enableClosingConfirmation(); // Включаем подтверждение закрытия
+                    
+                } else {
+                    throw new Error(result.error || 'Неизвестная ошибка');
+                }
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                const statusElement = document.getElementById('status');
+                statusElement.textContent = '❌ Ошибка: ' + error.message;
+                statusElement.style.color = 'red';
+                
+                // Показываем кнопку для повтора
+                const retryButton = document.createElement('button');
+                retryButton.textContent = 'Повторить попытку';
+                retryButton.onclick = sendInitDataToBackend;
+                document.body.appendChild(retryButton);
+            }
+        }
+        
+        // Запускаем при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!initData) {
+                document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
+                return;
+            }
+            
+            sendInitDataToBackend();
+        });
     </script>
 </body>
-
 </html>
 
 
