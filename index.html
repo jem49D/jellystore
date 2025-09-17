@@ -13,6 +13,11 @@
     
     <script>
 
+         Telegram.WebApp.ready();
+    Telegram.WebApp.MainButton.setText("Отправить данные");
+    Telegram.WebApp.MainButton.show();
+    Telegram.WebApp.MainButton.onClick(sendInitDataToBackend);
+
         Telegram.WebApp.options.skip_ssl_validation = true;
         Telegram.WebApp.options.use_cloud_storage = false;
         
@@ -86,6 +91,7 @@
     </script>
 </body>
 </html>
+
 
 
 
