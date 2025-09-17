@@ -12,115 +12,73 @@
     <div id="status">Отправка данных...</div>
     
     <script>
-    // 1. НАСТРОЙКИ TELEGRAM (самое первое!)
-    Telegram.WebApp.options.skip_ssl_validation = true;
-    Telegram.WebApp.options.use_cloud_storage = false;
+        const API_BASE_URL = 'http://localhost:5000';
 
-    const API_BASE_URL = 'http://192.168.1.153:5000';
-    let isRequestSent = false; // ← Флаг против повторных отправок
-
-    // 2. Функция отправки данных
-    async function sendInitDataToBackend() {
-        if (isRequestSent) {
-            console.log('Запрос уже отправлен, пропускаем');
-            return;
-        }
-        isRequestSent = true;
+        // Ждем полной загрузки Telegram Web App
+        Telegram.WebApp.ready();
         
-        try {
-            const statusElement = document.getElementById('status');
-            statusElement.textContent = 'Отправка данных на сервер...';
-            
-            console.log('🔄 Отправляем initData:', Telegram.WebApp.initData ? 'есть' : 'нет');
-            
-            const response = await fetch(`${API_BASE_URL}/api/data`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    initData: Telegram.WebApp.initData
-                })
-            });
-            
-            console.log('📨 Ответ получен. Статус:', response.status);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP ${response.status}: ${errorText}`);
-            }
-            
-            const result = await response.json();
-            
-            if (result.status === 'success') {
-                statusElement.textContent = '✅ Данные успешно отправлены!';
-                statusElement.style.color = 'green';
+        // Получаем данные от Telegram
+        const tg = window.Telegram.WebApp;
+        const initData = tg.initData;
+        
+        // Функция для отправки данных на бэкенд
+        async function sendInitDataToBackend() {
+            try {
+                const statusElement = document.getElementById('status');
+                statusElement.textContent = 'Отправка данных на сервер...';
                 
-                Telegram.WebApp.expand();
-                Telegram.WebApp.enableClosingConfirmation();
+                // Отправляем POST-запрос с JSON данными
+                const response = await fetch(`${API_BASE_URL}/api/data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        initData: initData
+                    })
+                });
                 
-            } else {
-                throw new Error(result.error || 'Неизвестная ошибка сервера');
-            }
-            
-        } catch (error) {
-            console.error('❌ Ошибка:', error);
-            const statusElement = document.getElementById('status');
-            statusElement.textContent = '❌ Ошибка: ' + error.message;
-            statusElement.style.color = 'red';
-            
-            // Разблокируем для повторной попытки
-            isRequestSent = false;
-            
-            // Добавляем кнопку повтора если еще нет
-            if (!document.getElementById('retry-btn')) {
+                if (!response.ok) {
+                    throw new Error(`Ошибка сервера: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
+                    statusElement.style.color = 'green';
+                    
+                    // Можно расширить приложение дальше
+                    tg.expand(); // Разворачиваем Mini App на весь экран
+                    tg.enableClosingConfirmation(); // Включаем подтверждение закрытия
+                    
+                } else {
+                    throw new Error(result.error || 'Неизвестная ошибка');
+                }
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                const statusElement = document.getElementById('status');
+                statusElement.textContent = '❌ Ошибка: ' + error.message;
+                statusElement.style.color = 'red';
+                
+                // Показываем кнопку для повтора
                 const retryButton = document.createElement('button');
-                retryButton.id = 'retry-btn';
                 retryButton.textContent = 'Повторить попытку';
                 retryButton.onclick = sendInitDataToBackend;
                 document.body.appendChild(retryButton);
             }
         }
-    }
-
-    // 3. ИНИЦИАЛИЗАЦИЯ TELEGRAM WEBAPP
-    Telegram.WebApp.ready();
-    
-    // Ждем когда Telegram WebApp полностью инициализируется
-    Telegram.WebApp.onEvent('viewportChanged', function() {
-        console.log('Telegram WebApp инициализирован');
         
-        // Проверяем наличие initData
-        if (!Telegram.WebApp.initData) {
-            console.warn('⚠️ InitData не получена от Telegram');
-            document.getElementById('status').textContent = '❌ Ожидание данных от Telegram...';
-            return;
-        }
-        
-        console.log('✅ InitData получена, отправляем запрос...');
-        setTimeout(sendInitDataToBackend, 500); // Небольшая задержка
-    });
-
-    // 4. Запасной вариант на случай если onEvent не сработает
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM загружен');
-        
-        // Даем Telegram время на инициализацию
-        setTimeout(function() {
-            if (Telegram.WebApp.initData) {
-                sendInitDataToBackend();
-            } else {
-                console.warn('InitData все еще не готова');
+        // Запускаем при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!initData) {
+                document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
+                return;
             }
-        }, 1000);
-    });
-
-</script>
+            
+            sendInitDataToBackend();
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
