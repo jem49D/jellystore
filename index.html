@@ -11,14 +11,10 @@
     <h1>Проверка данных</h1>
     <div id="status">Отправка данных...</div>
     
-    <script>
-    Telegram.WebApp.options.skip_ssl_validation = true;
-    Telegram.WebApp.options.use_cloud_storage = false;
-
-    const API_BASE_URL = 'http://192.168.1.153:5000';
-    let isRequestSent = false; // ← ФЛАГ ОТПРАВКИ
-    let retryCount = 0; // ← СЧЕТЧИК ПОПЫТОК
-    const MAX_RETRIES = 3; // ← МАКСИМУМ ПОПЫТОК
+   <script>
+    const API_BASE_URL = 'http://192.168.1.153:5000'; // ← ПРАВИЛЬНЫЙ IP
+    let isRequestSent = false; // ← Флаг защиты
+    let retryCount = 0; // ← Счетчик попыток
 
     Telegram.WebApp.ready();
     
@@ -31,19 +27,12 @@
             console.log('Запрос уже отправлен, пропускаем');
             return;
         }
-        
-        // ПРОВЕРКА ЛИМИТА ПОПЫТОК
-        if (retryCount >= MAX_RETRIES) {
-            document.getElementById('status').textContent = '❌ Превышено количество попыток';
-            return;
-        }
-        
         isRequestSent = true;
         retryCount++;
-        
+
         try {
             const statusElement = document.getElementById('status');
-            statusElement.textContent = `Отправка данных... (Попытка ${retryCount}/${MAX_RETRIES})`;
+            statusElement.textContent = 'Отправка данных на сервер...';
             
             const response = await fetch(`${API_BASE_URL}/api/data`, {
                 method: 'POST',
@@ -62,7 +51,7 @@
             const result = await response.json();
             
             if (result.status === 'success') {
-                statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
+                statusElement.textContent = '✅ Данные успешно отправлены!';
                 statusElement.style.color = 'green';
                 
                 tg.expand();
@@ -75,13 +64,13 @@
         } catch (error) {
             console.error('Ошибка:', error);
             const statusElement = document.getElementById('status');
-            statusElement.textContent = `❌ Ошибка: ${error.message} (Попытка ${retryCount}/${MAX_RETRIES})`;
+            statusElement.textContent = '❌ Ошибка: ' + error.message;
             statusElement.style.color = 'red';
             
-            // РАЗБЛОКИРУЕМ ДЛЯ ПОВТОРНОЙ ПОПЫТКИ
+            // Разблокируем для повторной попытки
             isRequestSent = false;
             
-            // СОЗДАЕМ КНОПКУ ТОЛЬКО ОДИН РАЗ
+            // Создаем кнопку только один раз
             if (!document.getElementById('retry-btn')) {
                 const retryButton = document.createElement('button');
                 retryButton.id = 'retry-btn';
@@ -94,14 +83,15 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         if (!initData) {
-            document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
+            document.getElementById('status').textContent = '❌ Нет данных от Telegram';
             return;
         }
         
-        // ЗАДЕРЖКА ПЕРЕД ОТПРАВКОЙ
+        // Задержка перед отправкой
         setTimeout(sendInitDataToBackend, 1000);
     });
 </script>
 </body>
 </html>
+
 
