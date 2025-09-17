@@ -12,73 +12,96 @@
     <div id="status">Отправка данных...</div>
     
     <script>
-        const API_BASE_URL = 'http://localhost:5000';
+    Telegram.WebApp.options.skip_ssl_validation = true;
+    Telegram.WebApp.options.use_cloud_storage = false;
 
-        // Ждем полной загрузки Telegram Web App
-        Telegram.WebApp.ready();
+    const API_BASE_URL = 'http://192.168.1.153:5000';
+    let isRequestSent = false; // ← ФЛАГ ОТПРАВКИ
+    let retryCount = 0; // ← СЧЕТЧИК ПОПЫТОК
+    const MAX_RETRIES = 3; // ← МАКСИМУМ ПОПЫТОК
+
+    Telegram.WebApp.ready();
+    
+    const tg = window.Telegram.WebApp;
+    const initData = tg.initData;
+
+    async function sendInitDataToBackend() {
+        // ЗАЩИТА ОТ ПОВТОРНОЙ ОТПРАВКИ
+        if (isRequestSent) {
+            console.log('Запрос уже отправлен, пропускаем');
+            return;
+        }
         
-        // Получаем данные от Telegram
-        const tg = window.Telegram.WebApp;
-        const initData = tg.initData;
+        // ПРОВЕРКА ЛИМИТА ПОПЫТОК
+        if (retryCount >= MAX_RETRIES) {
+            document.getElementById('status').textContent = '❌ Превышено количество попыток';
+            return;
+        }
         
-        // Функция для отправки данных на бэкенд
-        async function sendInitDataToBackend() {
-            try {
-                const statusElement = document.getElementById('status');
-                statusElement.textContent = 'Отправка данных на сервер...';
+        isRequestSent = true;
+        retryCount++;
+        
+        try {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = `Отправка данных... (Попытка ${retryCount}/${MAX_RETRIES})`;
+            
+            const response = await fetch(`${API_BASE_URL}/api/data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    initData: initData
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Ошибка сервера: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
+                statusElement.style.color = 'green';
                 
-                // Отправляем POST-запрос с JSON данными
-                const response = await fetch(`${API_BASE_URL}/api/data`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        initData: initData
-                    })
-                });
+                tg.expand();
+                tg.enableClosingConfirmation();
                 
-                if (!response.ok) {
-                    throw new Error(`Ошибка сервера: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
-                    statusElement.style.color = 'green';
-                    
-                    // Можно расширить приложение дальше
-                    tg.expand(); // Разворачиваем Mini App на весь экран
-                    tg.enableClosingConfirmation(); // Включаем подтверждение закрытия
-                    
-                } else {
-                    throw new Error(result.error || 'Неизвестная ошибка');
-                }
-                
-            } catch (error) {
-                console.error('Ошибка:', error);
-                const statusElement = document.getElementById('status');
-                statusElement.textContent = '❌ Ошибка: ' + error.message;
-                statusElement.style.color = 'red';
-                
-                // Показываем кнопку для повтора
+            } else {
+                throw new Error(result.error || 'Неизвестная ошибка');
+            }
+            
+        } catch (error) {
+            console.error('Ошибка:', error);
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = `❌ Ошибка: ${error.message} (Попытка ${retryCount}/${MAX_RETRIES})`;
+            statusElement.style.color = 'red';
+            
+            // РАЗБЛОКИРУЕМ ДЛЯ ПОВТОРНОЙ ПОПЫТКИ
+            isRequestSent = false;
+            
+            // СОЗДАЕМ КНОПКУ ТОЛЬКО ОДИН РАЗ
+            if (!document.getElementById('retry-btn')) {
                 const retryButton = document.createElement('button');
+                retryButton.id = 'retry-btn';
                 retryButton.textContent = 'Повторить попытку';
                 retryButton.onclick = sendInitDataToBackend;
                 document.body.appendChild(retryButton);
             }
         }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!initData) {
+            document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
+            return;
+        }
         
-        // Запускаем при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!initData) {
-                document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
-                return;
-            }
-            
-            sendInitDataToBackend();
-        });
-    </script>
+        // ЗАДЕРЖКА ПЕРЕД ОТПРАВКОЙ
+        setTimeout(sendInitDataToBackend, 1000);
+    });
+</script>
 </body>
 </html>
+
