@@ -132,7 +132,7 @@ function loadProducts(reset = false) {
     document.getElementById('loading').classList.remove('hidden');
     
     // 4. Формирование URL запроса
-    let url = `/api/products?page=${currentPage}`;
+    let url = `${API_BASE_URL}/api/products?page=${currentPage}`;
     // if (currentSearch || currentCategory) {
     //     url = `/api/products/search?page=${currentPage}`;
     //     if (currentSearch) url += `&q=${encodeURIComponent(currentSearch)}`;
@@ -214,3 +214,4 @@ document.addEventListener('DOMContentLoaded', () => loadProducts(true));
     </script>
 </body>
 </html>
+
