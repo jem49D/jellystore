@@ -6,10 +6,38 @@
     <link rel="stylesheet" href="style.css">
     <title>JellyStore</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
 </head>
 <body>
     <h1>Проверка данных</h1>
     <div id="status">Отправка данных...</div>
+
+        <h1 style="text-align: center;">Каталог товаров</h1>
+    
+    <div class="search-form">
+        <input type="text" id="search-input" placeholder="Поиск товаров...">
+        <select id="category-select">
+            <option value="">Все категории</option>
+            <option value="electronics">Электроника</option>
+            <option value="clothing">Одежда</option>
+            <option value="books">Книги</option>
+        </select>
+        <button onclick="searchProducts()">Поиск</button>
+    </div>
+    
+    <div id="product-grid" class="product-grid">
+        <!-- Товары будут добавляться здесь через JavaScript -->
+    </div>
+    
+    <div id="loading" class="loading hidden">
+        ⏳ Загрузка товаров...
+    </div>
+    
+    <div id="no-more" class="loading hidden">
+        ✅ Товары закончились!
+    </div>
+
+    <!-- <script src="{{ url_for('static', filename='js/infinite-scroll.js') }}"></script> -->
     
     <script>
         const API_BASE_URL = 'http://localhost:5000';
@@ -79,6 +107,110 @@
             
             sendInitDataToBackend();
         });
+
+
+let currentPage = 1;
+let isLoading = false;
+let hasMore = true;
+let currentSearch = '';
+let currentCategory = '';
+
+function loadProducts(reset = false) {
+    // 1. Защита от дублирующих запросов
+    if (isLoading || !hasMore) return;
+    
+    // 2. Сброс состояния при необходимости
+    if (reset) {
+        currentPage = 1;
+        hasMore = true;
+        document.getElementById('product-grid').innerHTML = '';
+        document.getElementById('no-more').classList.add('hidden');
+    }
+    
+    // 3. Установка состояния загрузки
+    isLoading = true;
+    document.getElementById('loading').classList.remove('hidden');
+    
+    // 4. Формирование URL запроса
+    let url = `/api/products?page=${currentPage}`;
+    // if (currentSearch || currentCategory) {
+    //     url = `/api/products/search?page=${currentPage}`;
+    //     if (currentSearch) url += `&q=${encodeURIComponent(currentSearch)}`;
+    //     if (currentCategory) url += `&category=${encodeURIComponent(currentCategory)}`;
+    // } поиск пока что не актуален
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const productGrid = document.getElementById('product-grid');
+                
+                data.products.forEach(product => {
+                    const productCard = createProductCard(product);
+                    productGrid.appendChild(productCard);
+                });
+                
+                hasMore = data.has_more;
+                currentPage++;
+                
+                if (!hasMore && data.products.length > 0) {
+                    document.getElementById('no-more').classList.remove('hidden');
+                }
+            } else {
+                console.error('Ошибка загрузки:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        })
+        .finally(() => {
+            isLoading = false;
+            document.getElementById('loading').classList.add('hidden');
+        });
+}
+
+function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    
+    card.innerHTML = `
+        ${product.image_url ? 
+            `<img src="${product.image_url}" alt="${product.name}" class="product-image">` : 
+            '<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">📷 Нет изображения</div>'
+        }
+        <h3>${product.name}</h3>
+        <p>${product.description ? product.description.substring(0, 100) + '...' : 'Нет описания'}</p>
+        <p><strong>Цена: ${product.price ? product.price + ' руб.' : 'Не указана'}</strong></p>
+    `;
+    
+    return card;
+}
+//  ${product.category ? `<p>Категория: ${product.category}</p>` : ''} выше пригодится мб
+// function searchProducts() {
+//     currentSearch = document.getElementById('search-input').value;
+//     currentCategory = document.getElementById('category-select').value;
+//     loadProducts(true);
+// } временно не нужно
+
+// Обработчик прокрутки
+window.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+        loadProducts();
+    }
+});
+
+// Обработчик Enter в поле поиска
+// document.getElementById('search-input').addEventListener('keypress', (e) => {
+//     if (e.key === 'Enter') {
+//         searchProducts();
+//     }
+// }); времено не нужно
+
+// Загрузка первых товаров при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => loadProducts(true));
+
     </script>
 </body>
 </html>
