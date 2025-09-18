@@ -143,6 +143,10 @@ function loadProducts(reset = false) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                        if (data.success) {
+            console.log('✅ Успешный ответ, товаров:', data.products.length);
+            console.log('📊 has_more:', data.has_more);
+            console.log('🔢 Товары:', data.products);}
                 const productGrid = document.getElementById('product-grid');
                 
                 data.products.forEach(product => {
@@ -214,5 +218,6 @@ document.addEventListener('DOMContentLoaded', () => loadProducts(true));
     </script>
 </body>
 </html>
+
 
 
