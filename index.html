@@ -178,7 +178,7 @@ function createProductCard(product) {
             `<img src="${product.image_url}" alt="${product.name}" class="product-image">` : 
             '<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">📷 Нет изображения</div>'
         }
-        <h3>${product.name}</h3>
+        <h3>${product.name_tov}</h3>
         <p>${product.description ? product.description.substring(0, 100) + '...' : 'Нет описания'}</p>
         <p><strong>Цена: ${product.price ? product.price + ' руб.' : 'Не указана'}</strong></p>
     `;
@@ -214,4 +214,5 @@ document.addEventListener('DOMContentLoaded', () => loadProducts(true));
     </script>
 </body>
 </html>
+
 
