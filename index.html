@@ -12,11 +12,10 @@
     border: 1px solid #ddd;
     border-radius: 16px;
     padding: 15px;
-    margin: 10px;
     background: white;
     text-align: left;
-    width: 160px;
-    
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .product-card img {
@@ -26,125 +25,420 @@
     border-radius: 16px;
 }
 
+.product-card h2 {
+    margin: 10px 0px 8px 0px;
+    font-weight: 600;
+    font-size: 16px;
+}
 
-body{
+.opis {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0 0 25px 0;
+    
+}
+
+.price-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.buy-button {
+    width: 32px;
+    height: 32px;
+    background: #E491A6;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buy-button:hover {
+    background: #D48297;
+}
+
+.buy-button:active {
+    background: #C57388;
+    transform: scale(0.95);
+}
+
+.two-card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 375px;
+}
+
+.product-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+body {
     background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.banner {
+    background-color: #845673;
+    color: white;
+    width: 100%;
+    height: 280px;
+    margin: 0;
+}
+
+.bannercen {
+    width: 375px;
+    height: 280px;
+    margin: 0 auto; 
+    display: block; 
+}
+ 
+.banner h1 {
+    margin: 0px 0;
+    font-size: 26px;
+}
+
+.banner p {
+    margin: 0;
+    font-size: 12px;
+    color: #A2A2A2;
+}
+
+.banner button {
+    color: white;
+    background: #E491A6;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 20px;
+     border-radius: 5px;
+}
+
+.banner button:hover {
+    background-color: #D48297; 
+    transform: translateY(-2px); 
+    cursor: pointer;
+}
+
+.banner button:active {
+    background-color: #C57388;
+    transform: translateY(0); /* Возвращаем на место */
+}
+
+.search-form {
+    display: none;
+}
+
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+html {
+    -webkit-overflow-scrolling: touch;
+}
+
+button, .product-card {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.infban{
+    padding: 60px 20px;
+}
+
+.poisk{
+  display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 100%;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.poisk button{
+    width: 52px;
+    height: 52px;
+    background-color: #E491A6; 
+    background-image: url('poisk.png'); 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px 24px; 
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.poisk button:hover {
+    background-color: #D48297; 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 12px rgba(228, 145, 166, 0.3); 
+    cursor: pointer;
+}
+
+.poisk button:active {
+    background-color: #C57388;
+    transform: translateY(0); 
+}
+
+.poisk input{
+background-color: #845673;
+height: 52px;
+width: 260px;
+border: none;
+border-radius: 12px;
+color: #fff;
+padding: 0 15px;
+}
+
+.poisk input::placeholder {
+    color: #ffffff;
+    opacity: 0.8; 
+}
+
+.poisk input:focus {
+    outline: 2px solid #E491A6;
+}
+
+.cater {
+    padding: 15px 20px;
+    margin-top: 20px;
+}
+
+.categories-container {
+    position: relative;
+    width: 100%;
+    max-width: 375px;
+    margin: 0 auto;
+}
+
+.categories-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; 
+}
+
+.categories-scroll::-webkit-scrollbar {
+    display: none; 
+}
+
+.category-btn {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+    background: #845673;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+    background: #734562;
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background: #E491A6;
+    font-weight: 600;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: #E491A6;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    display: none;
+}
+
+.scroll-left {
+    left: -15px;
+}
+
+.scroll-right {
+    right: -15px;
+}
+
+.categories-container:hover .scroll-btn {
+    display: block;
+}
+
+@media (max-width: 480px) {
+    .cater {
+        padding: 10px 15px;
+    }
+    
+    .category-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+    
+    .scroll-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+    
+    .scroll-left {
+        left: -10px;
+    }
+    
+    .scroll-right {
+        right: -10px;
+    }
 }
 
 </style>
 </head>
 <body>
-    <h1>Проверка данных</h1>
-    <div id="status">Отправка данных...</div>
 
-        <h1 style="text-align: center;">Каталог товаров</h1>
-    
-    <div class="search-form">
-        <input type="text" id="search-input" placeholder="Поиск товаров...">
-        <select id="category-select">
-            <option value="">Все категории</option>
-            <option value="electronics">Электроника</option>
-            <option value="clothing">Одежда</option>
-            <option value="books">Книги</option>
-        </select>
-        <button onclick="searchProducts()">Поиск</button>
+
+    <div class="banner">
+        <div class="bannercen">
+        <div class="infban">
+            <p>Твой магазин закусок</p>
+            <h1>JellyStore</h1>
+            <button>Подробнее</button>
+        </div>
+        </div>
     </div>
+
+    <div class="poisk">
+        <input type="text" placeholder="Поиск">
+        <button></button>
+    </div>
+
+    <div class="cater">
+    <div class="categories-container">
+        <div class="categories-scroll" id="categoriesScroll">
+
+        </div>
+    </div>
+    </div>
+
+    <div id="status">Отправка данных...</div>
     
     <div id="product-grid" class="product-grid">
-        <!-- Товары будут добавляться здесь через JavaScript -->
-    </div>
-    
-    <div id="loading" class="loading hidden">
-        ⏳ Загрузка товаров...
-    </div>
-    
-    <div id="no-more" class="loading hidden">
-        ✅ Товары закончились!
-    </div>
 
-    <!-- <script src="{{ url_for('static', filename='js/infinite-scroll.js') }}"></script> -->
+    </div>
     
-    <script>
-        const API_BASE_URL = 'http://localhost:5000';
+    <div id="loading" class="loading hidden">⏳ Загрузка товаров...</div>
+    
+    <div id="no-more" class="loading hidden">✅ Товары закончились!</div>
+    
+   <script>
 
-        // Ждем полной загрузки Telegram Web App
-        Telegram.WebApp.ready();
-        
-        // Получаем данные от Telegram
-        const tg = window.Telegram.WebApp;
-        const initData = tg.initData;
-        
-        // Функция для отправки данных на бэкенд
-        async function sendInitDataToBackend() {
-            try {
-                const statusElement = document.getElementById('status');
-                statusElement.textContent = 'Отправка данных на сервер...';
-                
-                // Отправляем POST-запрос с JSON данными
-                const response = await fetch(`${API_BASE_URL}/api/data`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        initData: initData
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Ошибка сервера: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
-                    statusElement.style.color = 'green';
-                    
-                    // Можно расширить приложение дальше
-                    tg.expand(); // Разворачиваем Mini App на весь экран
-                    tg.enableClosingConfirmation(); // Включаем подтверждение закрытия
-                    
-                } else {
-                    throw new Error(result.error || 'Неизвестная ошибка');
-                }
-                
-            } catch (error) {
-                console.error('Ошибка:', error);
-                const statusElement = document.getElementById('status');
-                statusElement.textContent = '❌ Ошибка: ' + error.message;
-                statusElement.style.color = 'red';
-                
-                // Показываем кнопку для повтора
-                const retryButton = document.createElement('button');
-                retryButton.textContent = 'Повторить попытку';
-                retryButton.onclick = sendInitDataToBackend;
-                document.body.appendChild(retryButton);
-            }
-        }
-        
-        // Запускаем при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!initData) {
-                document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
-                return;
+    const API_BASE_URL = 'http://localhost:5000';
+
+    Telegram.WebApp.ready();
+    
+    const tg = window.Telegram.WebApp;
+    const initData = tg.initData;
+    
+    async function sendInitDataToBackend() {
+        try {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = 'Отправка данных на сервер...';
+            
+            const response = await fetch(`${API_BASE_URL}/api/data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    initData: initData
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Ошибка сервера: ${response.status}`);
             }
             
-            sendInitDataToBackend();
-        });
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                statusElement.textContent = '✅ Данные успешно отправлены и сохранены!';
+                statusElement.style.color = 'green';
+                
+                tg.expand();
+                tg.enableClosingConfirmation();
+                
+            } else {
+                throw new Error(result.error || 'Неизвестная ошибка');
+            }
+            
+        } catch (error) {
+            console.error('Ошибка:', error);
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = '❌ Ошибка: ' + error.message;
+            statusElement.style.color = 'red';
+            
+            const retryButton = document.createElement('button');
+            retryButton.textContent = 'Повторить попытку';
+            retryButton.onclick = sendInitDataToBackend;
+            document.body.appendChild(retryButton);
+        }
+    }
+    
+    // Запускаем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!initData) {
+            document.getElementById('status').textContent = '❌ Ошибка: Нет данных от Telegram';
+            return;
+        }
+        
+        sendInitDataToBackend();
+    });
 
+    // Переменные для пагинации
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMore = true;
+    // let currentSearch = '';
+    // let currentCategory = ''; для поиска  пока не нужно
 
-let currentPage = 1;
-let isLoading = false;
-let hasMore = true;
-let currentSearch = '';
-let currentCategory = '';
-
-function loadProducts(reset = false) {
-    // 1. Защита от дублирующих запросов
+    // Функция загрузки товаров (ТА, КОТОРУЮ ВЫ ПОКАЗАЛИ)
+    function loadProducts(reset = false) {
     if (isLoading || !hasMore) return;
     
-    // 2. Сброс состояния при необходимости
     if (reset) {
         currentPage = 1;
         hasMore = true;
@@ -152,29 +446,36 @@ function loadProducts(reset = false) {
         document.getElementById('no-more').classList.add('hidden');
     }
     
-    // 3. Установка состояния загрузки
     isLoading = true;
     document.getElementById('loading').classList.remove('hidden');
     
-    // 4. Формирование URL запроса
     let url = `${API_BASE_URL}/api/products?page=${currentPage}`;
-    // if (currentSearch || currentCategory) {
-    //     url = `/api/products/search?page=${currentPage}`;
-    //     if (currentSearch) url += `&q=${encodeURIComponent(currentSearch)}`;
-    //     if (currentCategory) url += `&category=${encodeURIComponent(currentCategory)}`;
-    // } поиск пока что не актуален
-
+    
+    // Добавляем параметры фильтрации
+    // if (currentCategory) {
+    //     url += `&category=${currentCategory}`;
+    // }
+    // if (currentSearch) {
+    //     url += `&search=${encodeURIComponent(currentSearch)}`;
+    // }
+    
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                
                 const productGrid = document.getElementById('product-grid');
                 
-                data.products.forEach(product => {
-                    const productCard = createProductCard(product);
-                    productGrid.appendChild(productCard);
-                });
+                if (reset && data.products.length === 0) {
+                    productGrid.innerHTML = '<p style="text-align: center; width: 100%;">Товары не найдены</p>';
+                    return;
+                }
+                
+                // Группируем товары по 2 штуки и создаем контейнеры
+                for (let i = 0; i < data.products.length; i += 2) {
+                    const twoProducts = data.products.slice(i, i + 2);
+                    const container = createTwoCardContainer(twoProducts);
+                    productGrid.appendChild(container);
+                }
                 
                 hasMore = data.has_more;
                 currentPage++;
@@ -195,48 +496,176 @@ function loadProducts(reset = false) {
         });
 }
 
-function createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    
-    card.innerHTML = `
-        ${product.image_url ? 
-            `<img src="${product.image_url}" alt="${product.name_tov}" class="product-image">` : 
-            '<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">📷 Нет изображения</div>'
-        }
-        <h3>${product.name_tov}</h3>
-        <p>${product.discript_tov ? product.discript_tov.substring(0, 50) + '...' : 'Нет описания'}</p>
-        <p><strong>Цена: ${product.price ? product.price + ' руб.' : 'Не указана'}</strong></p>
-    `;
-    
-    return card;
-}
-//  ${product.category ? `<p>Категория: ${product.category}</p>` : ''} выше пригодится мб
-// function searchProducts() {
-//     currentSearch = document.getElementById('search-input').value;
-//     currentCategory = document.getElementById('category-select').value;
-//     loadProducts(true);
-// } временно не нужно
 
-// Обработчик прокрутки
-window.addEventListener('scroll', () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
-        loadProducts();
+    function loadCategories() {
+    fetch(`${API_BASE_URL}/api/categories`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                createCategoryButtons(data.kater);
+                setupScrollButtons();
+            } else {
+                console.error('Ошибка загрузки категорий:', data.error);
+                // Создаем тестовые категории если API не работает
+                createTestCategories();
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки категорий:', error);
+            createTestCategories();
+        });
+}
+
+    // Функция создания карточки товара
+    function createProductCard(product) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        card.innerHTML = `
+            ${product.image_url ? 
+                `<img src="${product.image_url}" alt="${product.name_tov}" class="product-image">` : 
+                '<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">📷 Нет изображения</div>'
+            }
+            <h2>${product.name_tov}</h2>
+            <p class='opis'>${product.discript_tov ? product.discript_tov.substring(0, 50) + '...' : 'Нет описания'}</p>
+            <div class="price-container"><strong>Цена:<br> ${product.price ? product.price + ' руб.' : 'Не указана'}</strong>  
+                <button class="buy-button" onclick="addToCart(${product.id})">+</button>
+            </div>
+        `;
+        
+        return card;
     }
+
+function createCategoryButtons(categories) {
+    const container = document.getElementById('categoriesScroll');
+    
+    // Очищаем контейнер
+    container.innerHTML = '';
+    
+    // Создаем кнопку "Все"
+    const allButton = document.createElement('button');
+    allButton.className = 'category-btn active';
+    allButton.textContent = 'Все';
+    allButton.onclick = () => filterProductsByCategory('');
+    container.appendChild(allButton);
+    
+    // Создаем кнопки категорий
+    categories.forEach(category => {
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        button.textContent = category.name || category.title || 'Категория';
+        button.onclick = () => filterProductsByCategory(category.id);
+        container.appendChild(button);
+    });
+}
+
+    // Функция создания контейнера с двумя карточками
+    function createTwoCardContainer(products) {
+        const container = document.createElement('div');
+        container.className = 'two-card-container';
+        
+        const firstProduct = products[0];
+        const secondProduct = products[1];
+        
+        if (firstProduct) {
+            const card1 = createProductCard(firstProduct);
+            container.appendChild(card1);
+        }
+        
+        if (secondProduct) {
+            const card2 = createProductCard(secondProduct);
+            container.appendChild(card2);
+        }
+        
+        return container;
+    }
+
+    // Функция добавления в корзину (НУЖНО ДОБАВИТЬ!)
+    // function addToCart(productId) {
+    //     // Реализация добавления в корзину
+    //     console.log('Добавляем товар в корзину:', productId);
+        
+    //     // Пример реализации:
+    //     const button = event.target;
+    //     button.style.background = '#4CAF50';
+    //     button.textContent = '✓';
+        
+    //     setTimeout(() => {
+    //         button.style.background = '#E491A6';
+    //         button.textContent = '+';
+    //     }, 1000);
+    // }
+
+    // Обработчик прокрутки
+    window.addEventListener('scroll', () => {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+            loadProducts();
+        }
+    });
+
+    // Загрузка первых товаров при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+    loadProducts(true);
+    loadCategories();
 });
 
-// Обработчик Enter в поле поиска
-// document.getElementById('search-input').addEventListener('keypress', (e) => {
-//     if (e.key === 'Enter') {
-//         searchProducts();
-//     }
-// }); времено не нужно
+function setupScrollButtons() {
+    const scrollContainer = document.getElementById('categoriesScroll');
+    const scrollLeftBtn = document.querySelector('.scroll-left');
+    const scrollRightBtn = document.querySelector('.scroll-right');
+    
+    if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
+    
+    scrollLeftBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+    
+    scrollRightBtn.addEventListener('click', () => {
+        scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+    
+    // Показываем/скрываем кнопки в зависимости от возможности прокрутки
+    const checkScrollButtons = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
+        scrollLeftBtn.style.display = scrollLeft > 0 ? 'block' : 'none';
+        scrollRightBtn.style.display = scrollLeft < scrollWidth - clientWidth - 10 ? 'block' : 'none';
+    };
+    
+    scrollContainer.addEventListener('scroll', checkScrollButtons);
+    window.addEventListener('resize', checkScrollButtons);
+    checkScrollButtons(); // Проверяем при загрузке
+}
 
-// Загрузка первых товаров при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => loadProducts(true));
+function filterProductsByCategory(categoryId) {
+    // Убираем активный класс у всех кнопок
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Добавляем активный класс к текущей кнопке
+    event.target.classList.add('active');
+    
+    currentCategory = categoryId;
+    currentSearch = '';
+    
+    // Перезагружаем товары с фильтром
+    loadProducts(true);
+}
 
-    </script>
+function createTestCategories() {
+    const testCategories = [
+        { id: 1, name: 'Сладости' },
+        { id: 2, name: 'Напитки' },
+        { id: 3, name: 'Чипсы' },
+        { id: 4, name: 'Печенье' },
+        { id: 5, name: 'Шоколад' }
+    ];
+    
+    createCategoryButtons(testCategories);
+    setupScrollButtons();
+}
+</script>
 </body>
 </html>
