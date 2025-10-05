@@ -17,6 +17,71 @@ html, body {
     background: #f9f9f9;
 }
 
+
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px 0;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2px 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: #E491A6;
+}
+
+.nav-icon {
+    width: 28px; /* Фиксированный размер для всех картинок */
+    height: 28px;
+    object-fit: contain; /* Сохраняет пропорции, не обрезает */
+    margin-bottom: 2px;
+    margin-top: 8px;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-icon {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(67%) sepia(12%) saturate(1233%) hue-rotate(295deg) brightness(95%) contrast(85%);
+}
+
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+    .bottom-nav {
+        padding: 3px 0;
+    }
+    
+    .nav-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+}
+
 .product-card {
     border: 1px solid #ddd;
     border-radius: 16px;
@@ -372,6 +437,18 @@ padding: 0 15px;
     <div id="loading" class="loading hidden">⏳ Загрузка товаров...</div>
     
     <div id="no-more" class="loading hidden">✅ Товары закончились!</div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active">
+        <img src="icon/home.png" alt="Главная" class="nav-icon">
+    </div>
+    <div class="nav-item">
+        <img src="icon/kat.png" alt="Корзина" class="nav-icon">
+    </div>
+    <div class="nav-item">
+        <img src="icon/prof.png" alt="Профиль" class="nav-icon">
+    </div>
+</nav>
     
    <script>
 
@@ -678,4 +755,3 @@ function createTestCategories() {
 </script>
 </body>
 </html>
-
