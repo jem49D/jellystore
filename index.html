@@ -314,9 +314,10 @@ padding: 0 15px;
     padding: 10px 5px; /* ДОБАВЬТЕ БОКОВЫЕ ОТСТУПЫ */
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    
-    /* Дополнительные стили для лучшего скролла */
     cursor: grab;
+        /* ДОБАВЬТЕ ЭТИ СТРОКИ */
+    width: 100%;
+    min-width: 0;
 }
 
 .categories-scroll:active {
@@ -757,6 +758,80 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Добавьте этот код в ваш существующий JavaScript
+function initHorizontalScroll() {
+    const scrollContainer = document.getElementById('categoriesScroll');
+    
+    if (!scrollContainer) return;
+    
+    // Обработчик колесика мыши для горизонтального скролла
+    scrollContainer.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        scrollContainer.scrollLeft += event.deltaY;
+    });
+}
+
+// Вызовите функцию после загрузки категорий
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts(true);
+    loadCategories();
+    initHorizontalScroll(); // Добавьте эту строку
+});
+
+// Функция для перетаскивания мышкой
+function initDragScroll() {
+    const scrollContainer = document.getElementById('categoriesScroll');
+    
+    if (!scrollContainer) return;
+    
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+    
+    // Начало перетаскивания
+    scrollContainer.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.pageX - scrollContainer.offsetLeft;
+        scrollLeft = scrollContainer.scrollLeft;
+        scrollContainer.style.cursor = 'grabbing';
+        scrollContainer.style.userSelect = 'none';
+    });
+    
+    // Завершение перетаскивания
+    scrollContainer.addEventListener('mouseleave', () => {
+        if (isDragging) {
+            isDragging = false;
+            scrollContainer.style.cursor = 'grab';
+            scrollContainer.style.userSelect = 'auto';
+        }
+    });
+    
+    scrollContainer.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            scrollContainer.style.cursor = 'grab';
+            scrollContainer.style.userSelect = 'auto';
+        }
+    });
+    
+    // Перетаскивание
+    scrollContainer.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - scrollContainer.offsetLeft;
+        const walk = (x - startX) * 2; // Скорость прокрутки
+        scrollContainer.scrollLeft = scrollLeft - walk;
+    });
+}
+
+// Вызовите функцию после загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts(true);
+    loadCategories();
+    initDragScroll(); // Добавьте эту строку
+});
+
 </script>
 </body>
 </html>
