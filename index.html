@@ -309,19 +309,26 @@ padding: 0 15px;
 .categories-scroll {
     display: flex;
     gap: 10px;
-    overflow-x: auto;
+    overflow-x: auto; /* ВКЛЮЧАЕТ ГОРИЗОНТАЛЬНУЮ ПРОКРУТКУ */
     scroll-behavior: smooth;
-    padding: 10px 0;
+    padding: 10px 5px; /* ДОБАВЬТЕ БОКОВЫЕ ОТСТУПЫ */
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; 
+    scrollbar-width: none;
+    
+    /* Дополнительные стили для лучшего скролла */
+    cursor: grab;
+}
+
+.categories-scroll:active {
+    cursor: grabbing;
 }
 
 .categories-scroll::-webkit-scrollbar {
-    display: none; 
+    display: none;
 }
 
 .category-btn {
-    flex: 0 0 auto;
+    flex: 0 0 auto; /* ВАЖНО: не дает кнопкам сжиматься */
     padding: 10px 20px;
     background: #845673;
     color: white;
@@ -331,6 +338,10 @@ padding: 0 15px;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.3s ease;
+    
+    /* Для iOS */
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .category-btn:hover {
@@ -343,6 +354,8 @@ padding: 0 15px;
     font-weight: 600;
 }
 
+/* УДАЛИТЕ ВЕСЬ ЭТОТ БЛОК */
+/*
 .scroll-btn {
     position: absolute;
     top: 50%;
@@ -370,6 +383,7 @@ padding: 0 15px;
 .categories-container:hover .scroll-btn {
     display: block;
 }
+*/
 
 @media (max-width: 480px) {
     .cater {
@@ -381,6 +395,8 @@ padding: 0 15px;
         font-size: 13px;
     }
     
+    /* УДАЛИТЕ ЭТИ СТИЛИ */
+    /*
     .scroll-btn {
         width: 28px;
         height: 28px;
@@ -394,6 +410,8 @@ padding: 0 15px;
     .scroll-right {
         right: -10px;
     }
+    */
+
 }
 
 </style>
@@ -718,7 +736,6 @@ function createTestCategories() {
     ];
     
     createCategoryButtons(testCategories);
-    setupScrollButtons();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
