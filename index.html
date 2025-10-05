@@ -752,6 +752,29 @@ function createTestCategories() {
     createCategoryButtons(testCategories);
     setupScrollButtons();
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Убираем активный класс у всех элементов
+            navItems.forEach(navItem => {
+                navItem.classList.remove('active');
+            });
+            
+            // Добавляем активный класс к нажатому элементу
+            this.classList.add('active');
+            
+            // Можно добавить логику переключения контента
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+});
+       
 </script>
 </body>
 </html>
+
