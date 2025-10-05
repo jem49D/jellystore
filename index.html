@@ -17,8 +17,6 @@ html, body {
     background: #f9f9f9;
 }
 
-
-
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -68,8 +66,6 @@ html, body {
     filter: brightness(0) saturate(100%) invert(67%) sepia(12%) saturate(1233%) hue-rotate(295deg) brightness(95%) contrast(85%);
 }
 
-
-/* Для мобильных устройств */
 @media (max-width: 768px) {
     .bottom-nav {
         padding: 3px 0;
@@ -404,7 +400,6 @@ padding: 0 15px;
 </head>
 <body>
 
-
     <div class="banner">
         <div class="bannercen">
         <div class="infban">
@@ -589,7 +584,6 @@ padding: 0 15px;
         .then(data => {
             if (data.success) {
                 createCategoryButtons(data.kater);
-                setupScrollButtons();
             } else {
                 console.error('Ошибка загрузки категорий:', data.error);
                 // Создаем тестовые категории если API не работает
@@ -697,32 +691,6 @@ function createCategoryButtons(categories) {
     loadCategories();
 });
 
-function setupScrollButtons() {
-    const scrollContainer = document.getElementById('categoriesScroll');
-    const scrollLeftBtn = document.querySelector('.scroll-left');
-    const scrollRightBtn = document.querySelector('.scroll-right');
-    
-    if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
-    
-    scrollLeftBtn.addEventListener('click', () => {
-        scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
-    });
-    
-    scrollRightBtn.addEventListener('click', () => {
-        scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
-    });
-    
-    // Показываем/скрываем кнопки в зависимости от возможности прокрутки
-    const checkScrollButtons = () => {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
-        scrollLeftBtn.style.display = scrollLeft > 0 ? 'block' : 'none';
-        scrollRightBtn.style.display = scrollLeft < scrollWidth - clientWidth - 10 ? 'block' : 'none';
-    };
-    
-    scrollContainer.addEventListener('scroll', checkScrollButtons);
-    window.addEventListener('resize', checkScrollButtons);
-    checkScrollButtons(); // Проверяем при загрузке
-}
 
 function filterProductsByCategory(categoryId) {
     // Убираем активный класс у всех кнопок
@@ -753,7 +721,6 @@ function createTestCategories() {
     setupScrollButtons();
 }
 
-
 document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.nav-item');
     
@@ -773,8 +740,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-       
 </script>
 </body>
 </html>
-
